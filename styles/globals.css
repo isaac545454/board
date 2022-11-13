@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+}
+
+body{
+    background-color: #f2f6fc;
+}
+
+body, select, button, input, textarea{
+    font: 400 1rem sans-serif;
+}
+
+button{
+    cursor: pointer;
+}
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+@media (max-width: 1200px) {
+    html{
+        font-size: 93.75%;
+    }
+}
+
+@media (max-width: 480px) {
+    html{
+        font-size: 84.75%;
+    }
+}
