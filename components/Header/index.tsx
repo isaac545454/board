@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import SigninButton from "../SigninButton";
 
 export default function Header() {
   return (
@@ -9,7 +10,7 @@ export default function Header() {
           <Image
             src="/logo.svg"
             alt="logo meu board"
-            className="cursor-pointer"
+            className="cursor-pointer max-[480px]:w-14"
             width={80}
             height={90}
           />
@@ -28,7 +29,7 @@ export default function Header() {
             Meu Board
           </Link>
         </nav>
-        <button className="ml-auto">entrar com o github</button>
+        <SigninButton />
       </div>
     </header>
   );
