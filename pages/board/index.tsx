@@ -1,6 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import { FiPlus, FiCalendar, FiEdit2, FiTrash, FiClock } from "react-icons/fi";
+import Btn from "/components/Btn";
 
 export default function board() {
   return (
@@ -66,7 +67,7 @@ export default function board() {
           </time>
         </div>
       </div>
-      ;
+      <Btn />
     </>
   );
 }
