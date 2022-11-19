@@ -1,6 +1,9 @@
 import React from "react";
 import Head from "next/head";
 import { FiPlus, FiCalendar, FiEdit2, FiTrash, FiClock } from "react-icons/fi";
+import { GetServerSideProps } from "next";
+import Btn from "/components/Btn";
+import { getSession } from "next-auth/react";
 
 export default function board() {
   return (
@@ -66,7 +69,25 @@ export default function board() {
           </time>
         </div>
       </div>
-      ;
+      <Btn />
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const session = await getSession({ req });
+  console.log(session);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  console.log(session);
+
+  return {
+    props: {},
+  };
+};

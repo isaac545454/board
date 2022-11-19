@@ -26,13 +26,13 @@ export default function Home() {
         </section>
 
         <div className="flex justify-center flex-wrap mt-2 mb-6">
-          <Image
+          {/* <Image
             src="https://sujeitoprogramador.com/wp-content/uploads/2022/08/home.png"
             alt="apoiadores desse programa"
             width="55"
             height="55"
             className="rounded-[50%] ml-3 transition-[5s] hover:scale-125"
-          />
+  />*/}
         </div>
       </main>
     </>
