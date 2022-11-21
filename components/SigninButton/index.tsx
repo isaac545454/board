@@ -6,7 +6,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function SigninButton() {
   const { data: session } = useSession();
-  // console.log(session);
+
   return session ? (
     <button
       className="ml-auto flex text-white items-center"
