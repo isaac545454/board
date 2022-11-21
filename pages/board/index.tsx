@@ -6,18 +6,33 @@ import Btn from "/components/Btn";
 import { getSession } from "next-auth/react";
 import firebase from "../../services/firebaseConnect";
 import { format } from "date-fns";
-import { Link } from "next/link";
+import Link from "next/link";
 
-interface Props {
+interface taskListType {
   id: string;
+  created: {
+    nanoseconds: number;
+    seconds: number;
+  };
+  createdFormated?: string;
+  tarefa: string;
+  userId: string;
   name: string;
 }
 
-export default function Board({ data }: Props) {
-  const [Task, setTask] = useState<string>("");
-  const [TaskList, setTaskList] = useState([]);
+interface Props {
+  data: {
+    id: string;
+    name: string;
+  };
+  json: string;
+}
 
-  console.log(Task);
+export default function Board({ data, json }: Props) {
+  const [Task, setTask] = useState<string>("");
+  const [TaskList, setTaskList] = useState<taskListType[]>(JSON.parse(json));
+
+  console.log(JSON.parse(json));
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -77,37 +92,39 @@ export default function Board({ data }: Props) {
           </button>
         </form>
         <h1 className="text-white mt-7 font-bold text-3xl">
-          voce tem 2 tarefas!
+          voce tem {TaskList.length}{" "}
+          {TaskList.length > 1 ? "tarefas" : "tarefa"}
         </h1>
 
         <section>
-          {TaskList.map((t) => (
-            <article className="bg-[#20212c] my-4 p-3 rounded-md" Key={t.id}>
-              <p className="cursor-pointer text-[#f1f2fc] text-base leading-[150%]">
-                <Link href="/board/123">aaa</Link>
-              </p>
+          {TaskList &&
+            TaskList.map((t) => (
+              <article className="bg-[#20212c] my-4 p-3 rounded-md" Key={t.id}>
+                <p className="cursor-pointer text-[#f1f2fc] text-base leading-[150%]">
+                  <Link href={`/board/${t.id}`}>{t.tarefa}</Link>
+                </p>
 
-              <div className="w-[100%] flex flex-row justify-between mt-4">
-                <div className="flex justify-center items-center">
-                  <div className="flex">
-                    <FiCalendar size="20" color="ffb800" />
-                    <time className="text-[#ffb800] mr-4 ml-1">
-                      17 julho 2021
-                    </time>
+                <div className="w-[100%] flex flex-row justify-between mt-4">
+                  <div className="flex justify-center items-center">
+                    <div className="flex">
+                      <FiCalendar size="20" color="ffb800" />
+                      <time className="text-[#ffb800] mr-4 ml-1">
+                        {t.createdFormated}
+                      </time>
+                    </div>
+                    <button className="flex bg-transparent cursor-pointer items-center justify-center">
+                      <FiEdit2 size="20" color="#fff" />
+                      <span className="ml-1 text-white">editar</span>
+                    </button>
                   </div>
-                  <button className="flex bg-transparent cursor-pointer items-center justify-center">
-                    <FiEdit2 size="20" color="#fff" />
-                    <span className="ml-1 text-white">editar</span>
+
+                  <button className="flex bg-transparent cursor-pointer items-center justify-center text-white">
+                    <FiTrash size="20" color="#ff3636" />
+                    <span className="ml-1 text-white">Excluir</span>
                   </button>
                 </div>
-
-                <button className="flex bg-transparent cursor-pointer items-center justify-center text-white">
-                  <FiTrash size="20" color="#ff3636" />
-                  <span className="ml-1 text-white">Excluir</span>
-                </button>
-              </div>
-            </article>
-          ))}
+              </article>
+            ))}
         </section>
       </main>
       <div className="max-w-[1120px] bg-[#17181f] rounded-md p-4 mx-auto my-4">
@@ -137,6 +154,25 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     };
   }
 
+  const tasks = await firebase
+    .firestore()
+    .collection("tarefas")
+    .where("userId", "==", session?.user.email)
+    .orderBy("created", "asc")
+    .get();
+
+  const dados = tasks.docs.map((item) => {
+    return {
+      createdFormated: format(item.data().created.toDate(), "dd MMMM yyyy"),
+      id: item.id,
+      ...item.data(),
+    };
+  });
+
+  const json = JSON.stringify(dados);
+
+  console.log(json);
+
   const data = {
     id: session.user.email,
     name: session.user.name,
@@ -145,6 +181,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   return {
     props: {
       data,
+      json,
     },
   };
 };
