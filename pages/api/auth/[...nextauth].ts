@@ -13,14 +13,16 @@ export const authOptions = {
   callback: {
     async session(session, token) {
       try {
-        return {
+        const data = {
+          id: "1aaa",
           ...session,
-          id: token.sub,
         };
+        return data;
+        console.log(data.id);
       } catch {
         return {
+          id: "aaa",
           ...session,
-          id: null,
         };
       }
     },
@@ -29,8 +31,7 @@ export const authOptions = {
 
       try {
         return true;
-      } catch (err) {
-        console.log(err);
+      } catch {
         return false;
       }
     },
