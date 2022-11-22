@@ -32,7 +32,6 @@ export default function Board({ data, json }: Props) {
   const [Task, setTask] = useState<string>("");
   const [TaskList, setTaskList] = useState<taskListType[]>(JSON.parse(json));
 
-  console.log(JSON.parse(json));
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -66,6 +65,21 @@ export default function Board({ data, json }: Props) {
       });
   };
 
+  const handleDelete = async (id: string) => {
+    await firebase
+      .firestore()
+      .collection("tarefas")
+      .doc(id)
+      .delete()
+      .then(() => {
+        const array = TaskList.filter((item) => item.id !== id);
+        setTaskList(array);
+      })
+      .catch(() => {
+        alert("OPS... ocorreu um erro");
+      });
+  };
+
   return (
     <>
       <Head>
@@ -93,7 +107,7 @@ export default function Board({ data, json }: Props) {
         </form>
         <h1 className="text-white mt-7 font-bold text-3xl">
           voce tem {TaskList.length}{" "}
-          {TaskList.length > 1 ? "tarefas" : "tarefa"}
+          {TaskList.length !== 1 ? "tarefas" : "tarefa"}
         </h1>
 
         <section>
@@ -118,7 +132,10 @@ export default function Board({ data, json }: Props) {
                     </button>
                   </div>
 
-                  <button className="flex bg-transparent cursor-pointer items-center justify-center text-white">
+                  <button
+                    onClick={() => handleDelete(t.id)}
+                    className="flex bg-transparent cursor-pointer items-center justify-center text-white"
+                  >
                     <FiTrash size="20" color="#ff3636" />
                     <span className="ml-1 text-white">Excluir</span>
                   </button>
