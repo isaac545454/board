@@ -168,7 +168,7 @@ export default function Board({ data, json }: Props) {
                 <div className="w-[100%] flex flex-row justify-between mt-4">
                   <div className="flex justify-center items-center">
                     <div className="flex">
-                      <FiCalendar size="20" color="ffb800" />
+                      <FiCalendar size="20" color="#ffb800" />
                       <time className="text-[#ffb800] mr-4 ml-1">
                         {t.createdFormated}
                       </time>
