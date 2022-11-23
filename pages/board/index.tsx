@@ -1,6 +1,13 @@
 import { useState, FormEvent } from "react";
 import Head from "next/head";
-import { FiPlus, FiCalendar, FiEdit2, FiTrash, FiClock } from "react-icons/fi";
+import {
+  FiPlus,
+  FiCalendar,
+  FiEdit2,
+  FiTrash,
+  FiClock,
+  FiX,
+} from "react-icons/fi";
 import { GetServerSideProps } from "next";
 import Btn from "/components/Btn";
 import { getSession } from "next-auth/react";
@@ -31,6 +38,7 @@ interface Props {
 export default function Board({ data, json }: Props) {
   const [Task, setTask] = useState<string>("");
   const [TaskList, setTaskList] = useState<taskListType[]>(JSON.parse(json));
+  const [TaskEdit, setTaskEdit] = useState<taskListType | null>(null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -39,6 +47,27 @@ export default function Board({ data, json }: Props) {
       alert("digite uma tarefa");
       return;
     }
+    if (TaskEdit) {
+      await firebase
+        .firestore()
+        .collection("tarefas")
+        .doc(TaskEdit.id)
+        .update({
+          tarefa: Task,
+        })
+        .then(() => {
+          let data = TaskList;
+          let taskIndex = TaskList.findIndex((item) => item.id === TaskEdit.id);
+          data[taskIndex].tarefa = Task;
+
+          setTaskList(data);
+
+          setTaskEdit(null);
+          setTask("");
+        });
+      return;
+    }
+
     await firebase
       .firestore()
       .collection("tarefas")
@@ -80,12 +109,30 @@ export default function Board({ data, json }: Props) {
       });
   };
 
+  const handleEdit = async (task: taskListType) => {
+    setTaskEdit(task);
+    setTask(task.tarefa);
+  };
+
+  const handleCancelEdit = () => {
+    setTaskEdit(null);
+    setTask("");
+  };
+
   return (
     <>
       <Head>
         <title>minhas tarefas</title>
       </Head>
       <main className="max-w-[1120px] mx-auto my-8 bg-[#17181f] rounded-md p-8">
+        {TaskEdit && (
+          <span className="flex items-center text-[#ff3636] ">
+            <button onClick={handleCancelEdit}>
+              <FiX size={24} color="#ff3636" className="cursor-pointer mr-1" />
+            </button>
+            você esta editando essa tarefa
+          </span>
+        )}
         <form
           className="flex justify-center items-center"
           onSubmit={handleSubmit}
@@ -126,7 +173,10 @@ export default function Board({ data, json }: Props) {
                         {t.createdFormated}
                       </time>
                     </div>
-                    <button className="flex bg-transparent cursor-pointer items-center justify-center">
+                    <button
+                      className="flex bg-transparent cursor-pointer items-center justify-center"
+                      onClick={() => handleEdit(t)}
+                    >
                       <FiEdit2 size="20" color="#fff" />
                       <span className="ml-1 text-white">editar</span>
                     </button>
