@@ -15,6 +15,7 @@ import firebase from "../../services/firebaseConnect";
 import { format } from "date-fns";
 import Link from "next/link";
 
+
 interface taskListType {
   id: string;
   created: {
@@ -124,7 +125,7 @@ export default function Board({ data, json }: Props) {
       <Head>
         <title>minhas tarefas</title>
       </Head>
-      <main className="max-w-[1120px] mx-auto my-8 bg-[#17181f] rounded-md p-8">
+      <main className="max-w-[1120px] max-h-[100vh] mx-auto my-8 bg-[#17181f] rounded-md p-8">
         {TaskEdit && (
           <span className="flex items-center text-[#ff3636] ">
             <button onClick={handleCancelEdit}>
@@ -212,7 +213,7 @@ export default function Board({ data, json }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const session = await getSession({ req });
-  if (!session.user.email) {
+  if (!session?.user.email) {
     return {
       redirect: {
         destination: "/",
