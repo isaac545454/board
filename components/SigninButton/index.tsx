@@ -4,21 +4,34 @@ import { FiX } from "react-icons/fi";
 import Image from "next/image";
 import { useSession, signIn, signOut } from "next-auth/react";
 
+interface UserSchema {
+  User: {
+    email: string;
+    image: string;
+    name: string;
+  };
+}
+
 export default function SigninButton() {
   const { data: session } = useSession();
+  if (!session.user.image) {
+    session.user.image = "aaa";
+  }
 
   return session ? (
     <button
       className="ml-auto flex text-white items-center"
       onClick={() => signOut()}
     >
-      <Image
-        src={session.user.image}
-        alt="steve jobs"
-        width="40"
-        height="40"
-        className="rounded-[50%] mr-4"
-      />
+      {session.user.image && (
+        <Image
+          src={String(session.user.image)}
+          alt="steve jobs"
+          width="40"
+          height="40"
+          className="rounded-[50%] mr-4"
+        />
+      )}
       ola {session.user.name}
       <FiX color="#737380" className="ml-4" />
     </button>

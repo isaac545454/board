@@ -49,6 +49,8 @@ export const getServerSideProps: GetServerSideProps = async ({
   const { id } = params;
   const session = await getSession({ req });
 
+  console.log(session.email);
+
   if (!session.user.email) {
     return {
       redirect: {
@@ -74,8 +76,19 @@ export const getServerSideProps: GetServerSideProps = async ({
       };
 
       return JSON.stringify(data);
+    })
+    .catch(() => {
+      return {};
     });
 
+  if (Object.keys(data).length === 0) {
+    return {
+      redirect: {
+        destination: "/board",
+        permanent: false,
+      },
+    };
+  }
   return {
     props: { data },
   };

@@ -1,7 +1,22 @@
 import Head from "next/head";
 import Image from "next/image";
 import { GetStaticProps } from "next";
-export default function Home() {
+import firebase from "../services/firebaseConnect";
+import { useState } from "react";
+
+interface Props {
+  data: string;
+}
+
+type Data = {
+  id: string;
+  donate: boolean;
+  lastDonate: Date;
+  image: string;
+};
+
+export default function Home({ data }: Props) {
+  const [donaters, serDonaters] = useState<Data>(JSON.parse(data));
   return (
     <>
       <Head>
@@ -25,23 +40,28 @@ export default function Home() {
           </p>
         </section>
 
-        <div className="flex justify-center flex-wrap mt-2 mb-6">
-          {/* <Image
-            src="https://sujeitoprogramador.com/wp-content/uploads/2022/08/home.png"
-            alt="apoiadores desse programa"
-            width="55"
-            height="55"
-            className="rounded-[50%] ml-3 transition-[5s] hover:scale-125"
-  />*/}
-        </div>
+        <div className="flex justify-center flex-wrap mt-2 mb-6"></div>
       </main>
     </>
   );
 }
 
 export const getStaticProps: GetStaticProps = async () => {
+  const donate = await firebase.firestore().collection("users").get();
+
+  const data = JSON.stringify(
+    donate.docs.map((u) => {
+      return {
+        id: u.id,
+        ...u.data(),
+      };
+    })
+  );
+
   return {
-    props: {},
+    props: {
+      data,
+    },
     revalidate: 60 * 60,
   };
 };
