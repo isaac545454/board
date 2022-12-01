@@ -15,7 +15,6 @@ import firebase from "../../services/firebaseConnect";
 import { format } from "date-fns";
 import Link from "next/link";
 
-
 interface taskListType {
   id: string;
   created: {
@@ -195,17 +194,7 @@ export default function Board({ data, json }: Props) {
             ))}
         </section>
       </main>
-      <div className="max-w-[1120px] bg-[#17181f] rounded-md p-4 mx-auto my-4">
-        <h3 className="text-[#ffb800] text-[2rem]">
-          Obrigado por apoiar esse projeto.
-        </h3>
-        <div className="mt-4 flex items-center">
-          <FiClock size={28} color="#fff" />
-          <time className="text-white text-xl ml-2">
-            Ultima dooação foi a 3 dias
-          </time>
-        </div>
-      </div>
+
       <Btn />
     </>
   );
@@ -238,8 +227,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   });
 
   const json = JSON.stringify(dados);
-
-  console.log(json);
 
   const data = {
     id: session.user.email,

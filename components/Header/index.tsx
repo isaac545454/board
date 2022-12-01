@@ -29,7 +29,9 @@ export default function Header() {
             Meu Board
           </Link>
         </nav>
-        <SigninButton />
+        <>
+          <SigninButton />
+        </>
       </div>
     </header>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import { GetServerSideProps } from "next";
@@ -18,6 +18,18 @@ interface Props {
 }
 
 export default function Donate({ user }: Props) {
+  const [vip, setVip] = useState<boolean>(false);
+  const handleSaveDonate = async () => {
+    await firebase.firestore().collection("users").doc(user.id);
+    set({
+      donate: true,
+      lastDonate: new Date(),
+      image: user.image,
+    }).then(() => {
+      setVip(true);
+    });
+  };
+
   return (
     <>
       <Head>
@@ -30,21 +42,23 @@ export default function Donate({ user }: Props) {
           width="500"
           height="500"
         />
-        <div className="mt-6 bg-[#019950] p-4 rounded-lg flex justify-center items-center text-white ">
-          <Image
-            src={user.image}
-            alt="foto de perfil do usuario"
-            width="50"
-            height="50"
-            className="rounded-[50%]"
-          />
-          <span className="ml-4">Paranbéns você é um apoiador.</span>
-        </div>
+        {vip && (
+          <div className="mt-6 bg-[#019950] p-4 rounded-lg flex justify-center items-center text-white ">
+            <Image
+              src={user.image}
+              alt="foto de perfil do usuario"
+              width="50"
+              height="50"
+              className="rounded-[50%]"
+            />
+            <span className="ml-4">Paranbéns você é um apoiador.</span>
+          </div>
+        )}
         <h1 className="text-3xl font-bold my-4 ">
           Seja um apoiador desse projeto
         </h1>
         <h3 className="mb-4">
-          Contribua ccom apenas
+          Contribua com apenas
           <span className="font-bold text-[#019950]">R$ 1,00</span>
         </h3>
         <strong className="mb-5 text-lg p-3 bg-[#eee]">
@@ -66,7 +80,7 @@ export default function Donate({ user }: Props) {
           onApprove={(data, actions) => {
             return actions.order?.capture().then(function (detail) {
               console.log("Compra aprovada: " + detail.payer.name?.given_name);
-              // handleSaveDonate();
+              handleSaveDonate();
             }) as Promise<void>;
           }}
         />

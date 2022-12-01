@@ -5,7 +5,8 @@ import { SessionProvider } from "next-auth/react";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 const initialOptions = {
-  "client-id": process.env.PAYPAL_ID as string,
+  "client-id":
+    "AQMXR6T9NbfhD6bdROOmClMHtRypEX_BKPO6d9_kj1uPaxe7wLoBK8AW5uxiI1MPNbAJ6h7vz840CgQO",
   currency: "BRL",
   intent: "capture",
 };
