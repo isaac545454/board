@@ -35,7 +35,7 @@ export default function Donate({ user }: Props) {
       <Head>
         <title>Ajude a platafoma a ficar online </title>
       </Head>
-      <main className="flex justify-center items-center flex-col h-[130vh] mt-10 mb-20">
+      <main className="flex justify-center items-center flex-col h-[100vh] mt-10 mb-20 max-[480px]:h-[100vh] max-[480px]:mt-3">
         <Image
           src="/rocket.svg"
           alt="seja um apoiador"
@@ -54,14 +54,14 @@ export default function Donate({ user }: Props) {
             <span className="ml-4">Paranbéns você é um apoiador.</span>
           </div>
         )}
-        <h1 className="text-3xl font-bold my-4 ">
+        <h1 className="text-3xl font-bold my-4 max-[480px]:text-center ">
           Seja um apoiador desse projeto
         </h1>
         <h3 className="mb-4">
           Contribua com apenas
           <span className="font-bold text-[#019950]">R$ 1,00</span>
         </h3>
-        <strong className="mb-5 text-lg p-3 bg-[#eee]">
+        <strong className="mb-5 text-lg p-3 bg-[#eee] max-[480px]:text-center">
           Apareça na nossa home, tenha funcionalidades exclusivas.
         </strong>
 

@@ -14,13 +14,10 @@ interface UserSchema {
 
 export default function SigninButton() {
   const { data: session } = useSession();
-  if (!session.user.image) {
-    session.user.image = "aaa";
-  }
 
   return session ? (
     <button
-      className="ml-auto flex text-white items-center"
+      className="ml-auto flex text-white items-center max-[480px]:flex-col max-[480px]"
       onClick={() => signOut()}
     >
       {session.user.image && (
@@ -29,11 +26,11 @@ export default function SigninButton() {
           alt="steve jobs"
           width="40"
           height="40"
-          className="rounded-[50%] mr-4"
+          className="rounded-[50%] mr-4 max-[480px]:mr-1"
         />
       )}
       ola {session.user.name}
-      <FiX color="#737380" className="ml-4" />
+      <FiX color="#737380" className="mr-4 max-[480px]:mr-1 " />
     </button>
   ) : (
     <button
@@ -41,7 +38,7 @@ export default function SigninButton() {
       onClick={() => {
         signIn("github");
       }}
-      className="ml-auto h-10 rounded-[3rem] bg-transparent flex justify-center items-center text-white px-6 font-bold"
+      className="ml-auto h-10 rounded-[3rem] bg-transparent flex justify-center items-center max-[480px]:flex-col text-white px-6 font-bold"
     >
       <FaGithub color="#ffb800" size={25} className="mr-4" />
       Entrar com github
